@@ -96,21 +96,25 @@ If you need to specify a custom Java installation, you can add:
 
 ### Custom Cipher Profile
 
-You can override the default SQLCipher 4 settings by including a `cipherProfile` in the configuration:
+You can override the default SQLCipher 4 settings by including a `cipherProfile` in the MCP server configuration. Add the `cipherProfile` object to the JSON string passed in the `args` parameter:
 
 ```json
 {
-  "dbPath": "/path/to/database.sqlite",
-  "passphrase": "your-passphrase",
-  "cipherProfile": {
-    "name": "SQLCipher 4 defaults",
-    "pageSize": 4096,
-    "kdfIterations": 256000,
-    "hmacAlgorithm": "HMAC_SHA512",
-    "kdfAlgorithm": "PBKDF2_HMAC_SHA512"
+  "mcpServers": {
+    "encrypted-sqlite": {
+      "command": "/path/to/mcp-sqlite/build/install/mcp-sqlite/bin/mcp-sqlite",
+      "args": [
+        "--args",
+        "{\"dbPath\":\"/path/to/your/database.sqlite\",\"passphrase\":\"your-passphrase\",\"cipherProfile\":{\"name\":\"SQLCipher 4 defaults\",\"pageSize\":4096,\"kdfIterations\":256000,\"hmacAlgorithm\":\"HMAC_SHA512\",\"kdfAlgorithm\":\"PBKDF2_HMAC_SHA512\"}}"
+      ]
+    }
   }
 }
 ```
+
+**Note:** The `cipherProfile` must be included in the JSON string within the `args` array, not as a separate configuration parameter. All fields in `cipherProfile` are optional - only specify the ones you want to override from the defaults.
+
+**Alternative:** You can also specify `cipherProfile` in individual tool calls (e.g., `listTables`, `getTableData`) to override the default configuration for that specific operation. However, it's recommended to configure it once in the MCP server configuration for consistency.
 
 ## Available Tools
 
