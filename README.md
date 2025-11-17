@@ -45,31 +45,13 @@ This MCP server can be used with any MCP-compatible client. The configuration fo
 
 ### MCP Client Configuration
 
-The server communicates via STDIO (standard input/output) and can be configured in any MCP client. Below are examples for popular clients:
+The server communicates via STDIO (standard input/output) and can be configured in any MCP client. Add the following configuration to your MCP client's configuration file:
 
-#### Cursor
-
-Add the following to your Cursor `mcp.json` file (typically located at `~/.cursor/mcp.json`):
-
-```json
-{
-  "mcpServers": {
-    "encrypted-sqlite": {
-      "command": "/path/to/mcp-sqlite/build/install/mcp-sqlite/bin/mcp-sqlite",
-      "args": [
-        "--args",
-        "{\"dbPath\":\"/path/to/your/database.sqlite\",\"passphrase\":\"your-passphrase\"}"
-      ]
-    }
-  }
-}
-```
-
-#### Claude Desktop
-
-Add the following to your Claude Desktop configuration file:
-- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+**Configuration file locations:**
+- **Cursor**: `~/.cursor/mcp.json`
+- **Claude Desktop** (macOS): `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Claude Desktop** (Windows): `%APPDATA%\Claude\claude_desktop_config.json`
+- **Other clients**: Refer to your client's documentation
 
 ```json
 {
@@ -84,10 +66,6 @@ Add the following to your Claude Desktop configuration file:
   }
 }
 ```
-
-#### Other MCP Clients
-
-For other MCP clients, refer to their documentation for the configuration format. The server uses the standard MCP protocol via STDIO transport.
 
 **Optional Parameters:**
 
