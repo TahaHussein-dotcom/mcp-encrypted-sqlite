@@ -58,6 +58,10 @@ Or use the latest version:
 docker pull ghcr.io/rosch100/mcp-sqlite:latest
 ```
 
+**Quick Start:** See [DOCKER_QUICKSTART.md](DOCKER_QUICKSTART.md) for Docker Desktop setup.
+
+**Detailed Configuration:** See [DOCKER_CONFIGURATION.md](DOCKER_CONFIGURATION.md) for advanced options.
+
 ## Configuration
 
 This MCP server can be used with any MCP-compatible client. The configuration format follows the [Model Context Protocol specification](https://modelcontextprotocol.io/).
@@ -117,6 +121,8 @@ If you need to specify a custom Java installation, you can add:
 
 If you're using the Docker image, configure it as follows:
 
+#### Plain Passphrase
+
 ```json
 {
   "mcpServers": {
@@ -137,7 +143,42 @@ If you're using the Docker image, configure it as follows:
 }
 ```
 
+#### Encrypted Passphrase (Recommended)
+
+When using encrypted passphrases, you **must** pass the encryption key as an environment variable:
+
+```json
+{
+  "mcpServers": {
+    "encrypted-sqlite": {
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-i",
+        "-e",
+        "MCP_SQLITE_ENCRYPTION_KEY=your-encryption-key",
+        "-v",
+        "/path/to/your/database.sqlite:/data/database.sqlite:ro",
+        "ghcr.io/rosch100/mcp-sqlite:0.2.1",
+        "--args",
+        "{\"db_path\":\"/data/database.sqlite\",\"passphrase\":\"encrypted:your-encrypted-passphrase\"}"
+      ]
+    }
+  }
+}
+```
+
+**Important Notes:**
+- The `-e` flag **must** come before the `-v` flag
+- **macOS Keychain is NOT accessible from Docker containers**, so you must pass the encryption key explicitly
+- Get your encryption key with: `security find-generic-password -s "mcp-sqlite" -a "encryption-key" -w`
+- Replace `your-encryption-key` with your actual encryption key
+- Replace `your-encrypted-passphrase` with your encrypted passphrase (starting with `encrypted:`)
+
 **Note:** The database file is mounted as read-only (`:ro`) by default. Remove `:ro` if you need write access.
+
+For detailed Docker configuration options, see [DOCKER_CONFIGURATION.md](DOCKER_CONFIGURATION.md).
 
 ### Custom Cipher Profile
 
