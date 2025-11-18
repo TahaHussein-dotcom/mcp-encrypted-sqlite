@@ -22,7 +22,7 @@ Docker Desktop on macOS requires explicit file sharing configuration.
 
 If your database is at:
 ```
-/Users/username/Library/Containers/com.moneymoney-app.retail/Data/Library/Application Support/MoneyMoney/Database/MoneyMoney.sqlite
+/Users/username/Library/Application Support/YourApp/Database/YourDatabase.sqlite
 ```
 
 Add `/Users` to File Sharing in Docker Desktop.
@@ -64,7 +64,7 @@ The path is missing the leading `/` or is not absolute.
         "--rm",
         "-i",
         "-v",
-        "/Users/username/Library/Containers/com.moneymoney-app.retail/Data/Library/Application Support/MoneyMoney/Database/MoneyMoney.sqlite:/data/database.sqlite:ro",
+        "/Users/username/Library/Application Support/YourApp/Database/YourDatabase.sqlite:/data/database.sqlite:ro",
         "ghcr.io/rosch100/mcp-sqlite:0.2.2",
         "--args",
         "{\"db_path\":\"/data/database.sqlite\",\"passphrase\":\"your-passphrase\"}"

@@ -530,7 +530,7 @@ echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":
         "--rm",
         "-i",
         "-v",
-        "/Users/username/Library/Containers/com.moneymoney-app.retail/Data/Library/Application Support/MoneyMoney/Database/MoneyMoney.sqlite:/data/database.sqlite:ro",
+        "/Users/username/Library/Application Support/YourApp/Database/YourDatabase.sqlite:/data/database.sqlite:ro",
         "ghcr.io/rosch100/mcp-sqlite:0.2.2",
         "--args",
         "{\"db_path\":\"/data/database.sqlite\",\"passphrase\":\"your-passphrase\"}"
