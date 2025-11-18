@@ -1,16 +1,16 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
-  "name": "io.github.rosch100/mcp-sqlite",
-  "description": "MCP server for SQLCipher 4 encrypted SQLite databases with full CRUD operations and query support",
+  "name": "io.github.rosch100/mcp-encrypted-sqlite",
+  "description": "MCP server for encrypted SQLite databases (SQLCipher 4) - Works with MoneyMoney, KeePass and other password-protected encrypted SQLite databases",
   "repository": {
-    "url": "https://github.com/rosch100/mcp-sqlite",
+    "url": "https://github.com/rosch100/mcp-encrypted-sqlite",
     "source": "github"
   },
-  "version": "0.2.4",
+  "version": "0.2.5",
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/rosch100/mcp-sqlite:0.2.4",
+      "identifier": "ghcr.io/rosch100/mcp-encrypted-sqlite:0.2.5",
       "transport": {
         "type": "stdio"
       },
@@ -32,7 +32,7 @@
       ],
       "installation": {
         "type": "source",
-        "instructions": "docker pull ghcr.io/rosch100/mcp-sqlite:latest"
+        "instructions": "docker pull ghcr.io/rosch100/mcp-encrypted-sqlite:latest"
       },
       "configuration": {
         "mcpServers": {
@@ -44,7 +44,7 @@
               "-i",
               "-v",
               "${DB_PATH}:/data/database.sqlite:ro",
-              "ghcr.io/rosch100/mcp-sqlite:latest",
+              "ghcr.io/rosch100/mcp-encrypted-sqlite:latest",
               "--args",
               "{\"db_path\":\"/data/database.sqlite\",\"passphrase\":\"${DB_PASSPHRASE}\"}"
             ]

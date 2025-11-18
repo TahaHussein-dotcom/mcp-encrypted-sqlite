@@ -5,19 +5,19 @@ This guide explains how to configure the MCP SQLite Server using Docker Desktop 
 ## Prerequisites
 
 1. **Docker Desktop** installed and running
-2. **Docker image** pulled: `ghcr.io/rosch100/mcp-sqlite:latest`
+2. **Docker image** pulled: `ghcr.io/rosch100/mcp-encrypted-sqlite:latest`
 3. **Encrypted SQLite database** file ready
 
 ## Pull the Docker Image
 
 ```bash
-docker pull ghcr.io/rosch100/mcp-sqlite:latest
+docker pull ghcr.io/rosch100/mcp-encrypted-sqlite:latest
 ```
 
 Or use a specific version:
 
 ```bash
-docker pull ghcr.io/rosch100/mcp-sqlite:VERSION
+docker pull ghcr.io/rosch100/mcp-encrypted-sqlite:VERSION
 ```
 
 ## Configuration Examples
@@ -37,7 +37,7 @@ Edit `~/.cursor/mcp.json` (or `%APPDATA%\Cursor\mcp.json` on Windows):
         "-i",
         "-v",
         "/path/to/your/database.sqlite:/data/database.sqlite:ro",
-        "ghcr.io/rosch100/mcp-sqlite:latest",
+        "ghcr.io/rosch100/mcp-encrypted-sqlite:latest",
         "--args",
         "{\"db_path\":\"/data/database.sqlite\",\"passphrase\":\"your-passphrase\"}"
       ]
@@ -67,7 +67,7 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json`:
         "-i",
         "-v",
         "/path/to/your/database.sqlite:/data/database.sqlite:ro",
-        "ghcr.io/rosch100/mcp-sqlite:latest",
+        "ghcr.io/rosch100/mcp-encrypted-sqlite:latest",
         "--args",
         "{\"db_path\":\"/data/database.sqlite\",\"passphrase\":\"your-passphrase\"}"
       ]
@@ -91,7 +91,7 @@ Edit `%APPDATA%\Claude\claude_desktop_config.json`:
         "-i",
         "-v",
         "C:/path/to/your/database.sqlite:/data/database.sqlite:ro",
-        "ghcr.io/rosch100/mcp-sqlite:latest",
+        "ghcr.io/rosch100/mcp-encrypted-sqlite:latest",
         "--args",
         "{\"db_path\":\"/data/database.sqlite\",\"passphrase\":\"your-passphrase\"}"
       ]
@@ -115,7 +115,7 @@ Edit `~/.config/Claude/claude_desktop_config.json`:
         "-i",
         "-v",
         "/path/to/your/database.sqlite:/data/database.sqlite:ro",
-        "ghcr.io/rosch100/mcp-sqlite:latest",
+        "ghcr.io/rosch100/mcp-encrypted-sqlite:latest",
         "--args",
         "{\"db_path\":\"/data/database.sqlite\",\"passphrase\":\"your-passphrase\"}"
       ]
@@ -134,7 +134,7 @@ When using encrypted passphrases (with `encrypted:` prefix), you **must** pass t
 
 **On macOS (if stored in Keychain):**
 ```bash
-security find-generic-password -s "mcp-sqlite" -a "encryption-key" -w
+security find-generic-password -s "mcp-encrypted-sqlite" -a "encryption-key" -w
 ```
 
 **Or if you have it stored elsewhere:**
@@ -155,7 +155,7 @@ Use your encryption key directly.
         "MCP_SQLITE_ENCRYPTION_KEY=your-encryption-key-here",
         "-v",
         "/path/to/your/database.sqlite:/data/database.sqlite:ro",
-        "ghcr.io/rosch100/mcp-sqlite:latest",
+        "ghcr.io/rosch100/mcp-encrypted-sqlite:latest",
         "--args",
         "{\"db_path\":\"/data/database.sqlite\",\"passphrase\":\"encrypted:your-encrypted-passphrase\"}"
       ]
@@ -186,7 +186,7 @@ Use your encryption key directly.
         "MCP_SQLITE_ENCRYPTION_KEY=your-encryption-key-here",
         "-v",
         "/Users/username/path/to/your/database.sqlite:/data/database.sqlite:ro",
-        "ghcr.io/rosch100/mcp-sqlite:latest",
+        "ghcr.io/rosch100/mcp-encrypted-sqlite:latest",
         "--args",
         "{\"db_path\":\"/data/database.sqlite\",\"passphrase\":\"encrypted:your-encrypted-passphrase-here\"}"
       ]
@@ -216,11 +216,11 @@ Load the encryption key from an environment variable that is set outside the con
 
 **Step 1:** Create a secure script to load the key:
 
-**macOS/Linux** (`~/.config/mcp-sqlite/env.sh`):
+**macOS/Linux** (`~/.config/mcp-encrypted-sqlite/env.sh`):
 ```bash
 #!/bin/bash
 # Load encryption key from macOS Keychain or secure storage
-export MCP_SQLITE_ENCRYPTION_KEY=$(security find-generic-password -s "mcp-sqlite" -a "encryption-key" -w 2>/dev/null)
+export MCP_SQLITE_ENCRYPTION_KEY=$(security find-generic-password -s "mcp-encrypted-sqlite" -a "encryption-key" -w 2>/dev/null)
 ```
 
 **Or use a password manager:**
@@ -233,7 +233,7 @@ export MCP_SQLITE_ENCRYPTION_KEY=$(op read "op://Private/MCP-SQLite/encryption-k
 **Step 2:** Source the script before starting Cursor/Claude Desktop:
 
 ```bash
-source ~/.config/mcp-sqlite/env.sh
+source ~/.config/mcp-encrypted-sqlite/env.sh
 # Then start Cursor/Claude Desktop
 ```
 
@@ -252,7 +252,7 @@ source ~/.config/mcp-sqlite/env.sh
         "MCP_SQLITE_ENCRYPTION_KEY=${MCP_SQLITE_ENCRYPTION_KEY}",
         "-v",
         "/path/to/your/database.sqlite:/data/database.sqlite:ro",
-        "ghcr.io/rosch100/mcp-sqlite:latest",
+        "ghcr.io/rosch100/mcp-encrypted-sqlite:latest",
         "--args",
         "{\"db_path\":\"/data/database.sqlite\",\"passphrase\":\"encrypted:your-encrypted-passphrase\"}"
       ]
@@ -267,14 +267,14 @@ source ~/.config/mcp-sqlite/env.sh
 
 Create a wrapper script that securely loads the encryption key and starts Docker.
 
-**Step 1:** Create wrapper script (`~/bin/mcp-sqlite-docker.sh`):
+**Step 1:** Create wrapper script (`~/bin/mcp-encrypted-sqlite-docker.sh`):
 
 ```bash
 #!/bin/bash
 # Wrapper script to securely start MCP SQLite Server with Docker
 
 # Load encryption key from macOS Keychain
-ENCRYPTION_KEY=$(security find-generic-password -s "mcp-sqlite" -a "encryption-key" -w 2>/dev/null)
+ENCRYPTION_KEY=$(security find-generic-password -s "mcp-encrypted-sqlite" -a "encryption-key" -w 2>/dev/null)
 
 if [ -z "$ENCRYPTION_KEY" ]; then
     echo "Error: Encryption key not found in Keychain" >&2
@@ -289,14 +289,14 @@ ENCRYPTED_PASSPHRASE="encrypted:your-encrypted-passphrase"
 exec docker run --rm -i \
     -e "MCP_SQLITE_ENCRYPTION_KEY=$ENCRYPTION_KEY" \
     -v "$DB_PATH:/data/database.sqlite:ro" \
-    ghcr.io/rosch100/mcp-sqlite:latest \
+    ghcr.io/rosch100/mcp-encrypted-sqlite:latest \
     --args "{\"db_path\":\"/data/database.sqlite\",\"passphrase\":\"$ENCRYPTED_PASSPHRASE\"}"
 ```
 
 **Step 2:** Make it executable:
 
 ```bash
-chmod +x ~/bin/mcp-sqlite-docker.sh
+chmod +x ~/bin/mcp-encrypted-sqlite-docker.sh
 ```
 
 **Step 3:** Use the wrapper script in your configuration:
@@ -305,7 +305,7 @@ chmod +x ~/bin/mcp-sqlite-docker.sh
 {
   "mcpServers": {
     "encrypted-sqlite": {
-      "command": "/Users/username/bin/mcp-sqlite-docker.sh",
+      "command": "/Users/username/bin/mcp-encrypted-sqlite-docker.sh",
       "args": []
     }
   }
@@ -335,7 +335,7 @@ If your Docker container is properly isolated and you trust your system security
         "-i",
         "-v",
         "/path/to/your/database.sqlite:/data/database.sqlite:ro",
-        "ghcr.io/rosch100/mcp-sqlite:latest",
+        "ghcr.io/rosch100/mcp-encrypted-sqlite:latest",
         "--args",
         "{\"db_path\":\"/data/database.sqlite\",\"passphrase\":\"your-plain-passphrase\"}"
       ]
@@ -360,10 +360,10 @@ If your Docker container is properly isolated and you trust your system security
 
 Store sensitive values in a separate file with restricted permissions.
 
-**Step 1:** Create secrets file (`~/.config/mcp-sqlite/secrets.env`):
+**Step 1:** Create secrets file (`~/.config/mcp-encrypted-sqlite/secrets.env`):
 
 ```bash
-# File permissions: chmod 600 ~/.config/mcp-sqlite/secrets.env
+# File permissions: chmod 600 ~/.config/mcp-encrypted-sqlite/secrets.env
 MCP_SQLITE_ENCRYPTION_KEY=your-encryption-key-here
 ```
 
@@ -371,18 +371,18 @@ MCP_SQLITE_ENCRYPTION_KEY=your-encryption-key-here
 
 ```bash
 #!/bin/bash
-source ~/.config/mcp-sqlite/secrets.env
+source ~/.config/mcp-encrypted-sqlite/secrets.env
 exec docker run --rm -i \
     -e "MCP_SQLITE_ENCRYPTION_KEY=$MCP_SQLITE_ENCRYPTION_KEY" \
     -v "/path/to/database.sqlite:/data/database.sqlite:ro" \
-    ghcr.io/rosch100/mcp-sqlite:latest \
+    ghcr.io/rosch100/mcp-encrypted-sqlite:latest \
     --args '{"db_path":"/data/database.sqlite","passphrase":"encrypted:..."}'
 ```
 
 **Step 3:** Protect the file:
 
 ```bash
-chmod 600 ~/.config/mcp-sqlite/secrets.env
+chmod 600 ~/.config/mcp-encrypted-sqlite/secrets.env
 ```
 
 ### Security Best Practices Summary
@@ -411,7 +411,7 @@ To use a custom cipher profile:
         "-i",
         "-v",
         "/path/to/your/database.sqlite:/data/database.sqlite:ro",
-        "ghcr.io/rosch100/mcp-sqlite:latest",
+        "ghcr.io/rosch100/mcp-encrypted-sqlite:latest",
         "--args",
         "{\"db_path\":\"/data/database.sqlite\",\"passphrase\":\"your-passphrase\",\"cipherProfile\":{\"name\":\"Custom\",\"pageSize\":4096,\"kdfIterations\":256000,\"hmacAlgorithm\":\"HMAC_SHA512\",\"kdfAlgorithm\":\"PBKDF2_HMAC_SHA512\"}}"
       ]
@@ -435,7 +435,7 @@ To enable write access to the database, remove the `:ro` flag:
         "-i",
         "-v",
         "/path/to/your/database.sqlite:/data/database.sqlite",
-        "ghcr.io/rosch100/mcp-sqlite:latest",
+        "ghcr.io/rosch100/mcp-encrypted-sqlite:latest",
         "--args",
         "{\"db_path\":\"/data/database.sqlite\",\"passphrase\":\"your-passphrase\"}"
       ]
@@ -461,7 +461,7 @@ To enable debug output:
         "/path/to/your/database.sqlite:/data/database.sqlite:ro",
         "-e",
         "MCP_DEBUG=true",
-        "ghcr.io/rosch100/mcp-sqlite:latest",
+        "ghcr.io/rosch100/mcp-encrypted-sqlite:latest",
         "--args",
         "{\"db_path\":\"/data/database.sqlite\",\"passphrase\":\"your-passphrase\"}"
       ]
@@ -479,7 +479,7 @@ Test the Docker container manually:
 ```bash
 docker run --rm -i \
   -v /path/to/your/database.sqlite:/data/database.sqlite:ro \
-  ghcr.io/rosch100/mcp-sqlite:latest \
+  ghcr.io/rosch100/mcp-encrypted-sqlite:latest \
   --args '{"db_path":"/data/database.sqlite","passphrase":"your-passphrase"}'
 ```
 
@@ -491,7 +491,7 @@ Send an initialize request:
 echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"1.0"}}}' | \
   docker run --rm -i \
   -v /path/to/your/database.sqlite:/data/database.sqlite:ro \
-  ghcr.io/rosch100/mcp-sqlite:latest \
+  ghcr.io/rosch100/mcp-encrypted-sqlite:latest \
   --args '{"db_path":"/data/database.sqlite","passphrase":"your-passphrase"}'
 ```
 
@@ -531,7 +531,7 @@ echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":
         "-i",
         "-v",
         "/Users/username/Library/Application Support/YourApp/Database/YourDatabase.sqlite:/data/database.sqlite:ro",
-        "ghcr.io/rosch100/mcp-sqlite:latest",
+        "ghcr.io/rosch100/mcp-encrypted-sqlite:latest",
         "--args",
         "{\"db_path\":\"/data/database.sqlite\",\"passphrase\":\"your-passphrase\"}"
       ]
@@ -575,8 +575,8 @@ echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":
 
 ### Image not found
 
-- Pull the image: `docker pull ghcr.io/rosch100/mcp-sqlite:latest`
-- Check if the image exists: `docker images | grep mcp-sqlite`
+- Pull the image: `docker pull ghcr.io/rosch100/mcp-encrypted-sqlite:latest`
+- Check if the image exists: `docker images | grep mcp-encrypted-sqlite`
 - Verify the tag is correct
 
 ## Security Considerations

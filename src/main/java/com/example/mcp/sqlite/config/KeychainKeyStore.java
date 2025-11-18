@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
  * Uses the macOS security command-line tool to access the Keychain.
  */
 public final class KeychainKeyStore {
-    private static final String KEYCHAIN_SERVICE = "mcp-sqlite";
+    private static final String KEYCHAIN_SERVICE = "mcp-encrypted-sqlite";
     private static final String KEYCHAIN_ACCOUNT = "encryption-key";
     private static final String SECURITY_CMD = "/usr/bin/security";
     

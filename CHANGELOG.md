@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.5] - 2025-11-18
+
+### Changed
+- **Repository Renamed**: Repository renamed from `mcp-sqlite` to `mcp-encrypted-sqlite` to better reflect the unique encrypted SQLite database support
+- **Documentation Enhanced**: Updated documentation to highlight encrypted SQLite database support as the key differentiator
+  - Added "Why Encrypted SQLite?" section with examples of applications using encrypted databases (MoneyMoney, 1Password, Signal, WhatsApp, Firefox, Telegram, KeePass)
+  - Reordered features to emphasize encrypted SQLite support as the primary feature
+  - Updated all repository URLs and references throughout documentation
+
+### Improved
+- **Visibility**: Enhanced discoverability for users seeking encrypted SQLite database support
+- **Clarity**: Made it clear that this server works with encrypted databases from popular applications
+
 ## [0.2.4] - 2025-11-18
 
 ### Changed

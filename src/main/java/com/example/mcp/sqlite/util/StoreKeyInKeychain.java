@@ -67,7 +67,7 @@ public class StoreKeyInKeychain {
             System.out.println("");
             System.out.println("You can now use the key from Keychain.");
             System.out.println("To delete the key:");
-            System.out.println("  security delete-generic-password -a encryption-key -s mcp-sqlite");
+            System.out.println("  security delete-generic-password -a encryption-key -s mcp-encrypted-sqlite");
         } catch (IOException e) {
             System.err.println("Error storing in Keychain: " + e.getMessage());
             e.printStackTrace();

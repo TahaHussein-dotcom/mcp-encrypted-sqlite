@@ -4,7 +4,7 @@
 set -e
 
 echo "Checking Keychain..."
-KEY=$(security find-generic-password -s "mcp-sqlite" -a "encryption-key" -w 2>/dev/null || echo "")
+KEY=$(security find-generic-password -s "mcp-encrypted-sqlite" -a "encryption-key" -w 2>/dev/null || echo "")
 
 if [ -n "$KEY" ]; then
     echo "✅ Key found in Keychain!"

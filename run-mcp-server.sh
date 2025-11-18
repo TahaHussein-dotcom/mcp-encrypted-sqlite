@@ -12,7 +12,7 @@ if [ -z "$JAVA_HOME" ]; then
     fi
 fi
 
-BINARY="./build/install/mcp-sqlite/bin/mcp-sqlite"
+BINARY="./build/install/mcp-encrypted-sqlite/bin/mcp-encrypted-sqlite"
 if [ ! -f "$BINARY" ]; then
     ./gradlew -q --console=plain installDist >&2 || exit 1
 fi

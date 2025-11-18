@@ -25,7 +25,7 @@ Add these topics to your repository:
 
 ### Website (optional)
 ```
-https://github.com/rosch100/mcp-sqlite
+https://github.com/rosch100/mcp-encrypted-sqlite
 ```
 
 ### Social Preview

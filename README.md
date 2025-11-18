@@ -1,10 +1,14 @@
 # Encrypted SQLite MCP Server
 
+**MCP server for encrypted SQLite databases**
+
 A Model Context Protocol (MCP) server for working with encrypted SQLite databases using SQLCipher. This server provides tools to read database structures, query tables, and perform CRUD operations on encrypted SQLite databases.
+
+**Works with encrypted databases from:** MoneyMoney, 1Password, Signal, WhatsApp, Firefox, Telegram, KeePass, and other applications using SQLCipher encryption.
 
 ## Features
 
-- 🔐 **SQLCipher Support**: Works with SQLCipher 4 encrypted databases
+- 🔐 **Encrypted SQLite Support**: Works with SQLCipher 4 encrypted databases - the key differentiator of this MCP server
 - 🔑 **Encrypted Passphrases**: Support for AES-256-GCM encrypted passphrases with macOS Keychain integration
 - 📊 **Database Exploration**: List tables, columns, indexes, and schema metadata
 - 🔍 **Query Support**: Execute arbitrary SQL queries (SELECT, INSERT, UPDATE, DELETE, DDL)
@@ -14,6 +18,22 @@ A Model Context Protocol (MCP) server for working with encrypted SQLite database
 - 🔒 **Security**: SQL identifier validation to prevent SQL injection
 - 🐛 **Debug Mode**: Optional debug output via `MCP_DEBUG` environment variable
 - 📏 **Input Validation**: Comprehensive validation for limits, offsets, and identifiers
+
+## Why Encrypted SQLite?
+
+Many popular applications use encrypted SQLite databases (SQLCipher) to protect sensitive data. This MCP server is specifically designed to work with these encrypted databases.
+
+### Applications Using Encrypted SQLite Databases
+
+- **MoneyMoney** (macOS): Financial management app with encrypted local databases
+- **1Password**: Password manager using SQLCipher for local vault storage
+- **Signal**: Encrypted messaging app with SQLCipher-protected message databases
+- **WhatsApp**: Messaging app using encrypted SQLite for local message storage
+- **Firefox**: Browser using SQLCipher for encrypted login databases
+- **Telegram**: Messaging app with encrypted local database storage
+- **KeePass**: Password manager supporting encrypted SQLite database files
+
+If you need to access data from any of these applications or other SQLCipher-encrypted databases, this MCP server provides the tools you need. Note that you need the passphrase of the encrypted database.
 
 ## Requirements
 
@@ -25,8 +45,8 @@ A Model Context Protocol (MCP) server for working with encrypted SQLite database
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/rosch100/mcp-sqlite.git
-cd mcp-sqlite
+git clone https://github.com/rosch100/mcp-encrypted-sqlite.git
+cd mcp-encrypted-sqlite
 ```
 
 2. Build the project (the SQLite JDBC driver will be downloaded automatically):
@@ -41,20 +61,20 @@ The build process will automatically download `sqlite-jdbc-3.50.1.0.jar` from [s
 ./gradlew installDist
 ```
 
-The executable will be available at `build/install/mcp-sqlite/bin/mcp-sqlite`.
+The executable will be available at `build/install/mcp-encrypted-sqlite/bin/mcp-encrypted-sqlite`.
 
 ### Docker Installation (Alternative)
 
 You can also use the pre-built Docker image from GitHub Container Registry:
 
 ```bash
-docker pull ghcr.io/rosch100/mcp-sqlite:latest
+docker pull ghcr.io/rosch100/mcp-encrypted-sqlite:latest
 ```
 
 Or use a specific version:
 
 ```bash
-docker pull ghcr.io/rosch100/mcp-sqlite:VERSION
+docker pull ghcr.io/rosch100/mcp-encrypted-sqlite:VERSION
 ```
 
 **Quick Start:** See [DOCKER_QUICKSTART.md](DOCKER_QUICKSTART.md) for Docker Desktop setup.
@@ -79,7 +99,7 @@ The server communicates via STDIO (standard input/output) and can be configured 
 {
   "mcpServers": {
     "encrypted-sqlite": {
-      "command": "/path/to/mcp-sqlite/build/install/mcp-sqlite/bin/mcp-sqlite",
+      "command": "/path/to/mcp-encrypted-sqlite/build/install/mcp-encrypted-sqlite/bin/mcp-encrypted-sqlite",
       "args": [
         "--args",
         "{\"db_path\":\"/path/to/your/database.sqlite\",\"passphrase\":\"your-passphrase\"}"
@@ -103,7 +123,7 @@ If you need to specify a custom Java installation, you can add:
 {
   "mcpServers": {
     "encrypted-sqlite": {
-      "command": "/path/to/mcp-sqlite/build/install/mcp-sqlite/bin/mcp-sqlite",
+      "command": "/path/to/mcp-encrypted-sqlite/build/install/mcp-encrypted-sqlite/bin/mcp-encrypted-sqlite",
       "args": [
         "--args",
         "{\"db_path\":\"/path/to/your/database.sqlite\",\"passphrase\":\"your-passphrase\"}"
@@ -133,7 +153,7 @@ If you're using the Docker image, configure it as follows:
         "-i",
         "-v",
         "/path/to/your/database.sqlite:/data/database.sqlite:ro",
-        "ghcr.io/rosch100/mcp-sqlite:latest",
+        "ghcr.io/rosch100/mcp-encrypted-sqlite:latest",
         "--args",
         "{\"db_path\":\"/data/database.sqlite\",\"passphrase\":\"your-passphrase\"}"
       ]
@@ -159,7 +179,7 @@ When using encrypted passphrases, you **must** pass the encryption key as an env
         "MCP_SQLITE_ENCRYPTION_KEY=your-encryption-key",
         "-v",
         "/path/to/your/database.sqlite:/data/database.sqlite:ro",
-        "ghcr.io/rosch100/mcp-sqlite:latest",
+        "ghcr.io/rosch100/mcp-encrypted-sqlite:latest",
         "--args",
         "{\"db_path\":\"/data/database.sqlite\",\"passphrase\":\"encrypted:your-encrypted-passphrase\"}"
       ]
@@ -171,7 +191,7 @@ When using encrypted passphrases, you **must** pass the encryption key as an env
 **Important Notes:**
 - The `-e` flag **must** come before the `-v` flag
 - **macOS Keychain is NOT accessible from Docker containers**, so you must pass the encryption key explicitly
-- Get your encryption key with: `security find-generic-password -s "mcp-sqlite" -a "encryption-key" -w`
+- Get your encryption key with: `security find-generic-password -s "mcp-encrypted-sqlite" -a "encryption-key" -w`
 - Replace `your-encryption-key` with your actual encryption key
 - Replace `your-encrypted-passphrase` with your encrypted passphrase (starting with `encrypted:`)
 
@@ -193,7 +213,7 @@ You can override the default SQLCipher 4 settings by including a `cipherProfile`
 {
   "mcpServers": {
     "encrypted-sqlite": {
-      "command": "/path/to/mcp-sqlite/build/install/mcp-sqlite/bin/mcp-sqlite",
+      "command": "/path/to/mcp-encrypted-sqlite/build/install/mcp-encrypted-sqlite/bin/mcp-encrypted-sqlite",
       "args": [
         "--args",
         "{\"db_path\":\"/path/to/your/database.sqlite\",\"passphrase\":\"your-passphrase\",\"cipherProfile\":{\"name\":\"SQLCipher 4 defaults\",\"pageSize\":4096,\"kdfIterations\":256000,\"hmacAlgorithm\":\"HMAC_SHA512\",\"kdfAlgorithm\":\"PBKDF2_HMAC_SHA512\"}}"
@@ -237,7 +257,7 @@ The key will be automatically loaded from the Keychain when no environment varia
 
 1. **Generate an encryption key:**
    ```bash
-   java -cp build/libs/mcp-sqlite-VERSION.jar com.example.mcp.sqlite.config.PassphraseEncryption
+   java -cp build/libs/mcp-encrypted-sqlite-VERSION.jar com.example.mcp.sqlite.config.PassphraseEncryption
    ```
    Or use this simple Java snippet:
    ```java
@@ -255,7 +275,7 @@ The key will be automatically loaded from the Keychain when no environment varia
    
    Using the CLI tool (after building):
    ```bash
-   java -cp build/libs/mcp-sqlite-VERSION.jar com.example.mcp.sqlite.util.EncryptPassphrase "your-plain-passphrase"
+   java -cp build/libs/mcp-encrypted-sqlite-VERSION.jar com.example.mcp.sqlite.util.EncryptPassphrase "your-plain-passphrase"
    ```
    
    Or programmatically:
@@ -275,7 +295,7 @@ Use the encrypted passphrase (with `encrypted:` prefix) in your configuration:
 {
   "mcpServers": {
     "encrypted-sqlite": {
-      "command": "/path/to/mcp-sqlite/build/install/mcp-sqlite/bin/mcp-sqlite",
+      "command": "/path/to/mcp-encrypted-sqlite/build/install/mcp-encrypted-sqlite/bin/mcp-encrypted-sqlite",
       "args": [
         "--args",
         "{\"db_path\":\"/path/to/your/database.sqlite\",\"passphrase\":\"encrypted:<encrypted-passphrase>\"}"
@@ -291,7 +311,7 @@ Use the encrypted passphrase (with `encrypted:` prefix) in your configuration:
 {
   "mcpServers": {
     "encrypted-sqlite": {
-      "command": "/path/to/mcp-sqlite/build/install/mcp-sqlite/bin/mcp-sqlite",
+      "command": "/path/to/mcp-encrypted-sqlite/build/install/mcp-encrypted-sqlite/bin/mcp-encrypted-sqlite",
       "args": [
         "--args",
         "{\"db_path\":\"/path/to/your/database.sqlite\",\"passphrase\":\"encrypted:<encrypted-passphrase>\"}"
@@ -470,7 +490,7 @@ The server supports optional debug output via the `MCP_DEBUG` environment variab
 {
   "mcpServers": {
     "encrypted-sqlite": {
-      "command": "/path/to/mcp-sqlite/build/install/mcp-sqlite/bin/mcp-sqlite",
+      "command": "/path/to/mcp-encrypted-sqlite/build/install/mcp-encrypted-sqlite/bin/mcp-encrypted-sqlite",
       "args": [
         "--args",
         "{\"db_path\":\"/path/to/your/database.sqlite\",\"passphrase\":\"your-passphrase\"}"
@@ -528,13 +548,13 @@ These settings match the defaults used by tools like "DB Browser for SQLite" wit
 Or use the installed binary:
 
 ```bash
-./build/install/mcp-sqlite/bin/mcp-sqlite --args '{"db_path":"/path/to/db.sqlite","passphrase":"secret"}'
+./build/install/mcp-encrypted-sqlite/bin/mcp-encrypted-sqlite --args '{"db_path":"/path/to/db.sqlite","passphrase":"secret"}'
 ```
 
 ### Project Structure
 
 ```
-mcp-sqlite/
+mcp-encrypted-sqlite/
 ├── src/
 │   ├── main/java/com/example/mcp/sqlite/
 │   │   ├── McpServer.java          # Main MCP server implementation
@@ -597,7 +617,7 @@ The MCP server includes extensive debugging features to help diagnose communicat
 
 **Manual testing:**
 ```bash
-./build/install/mcp-sqlite/bin/mcp-sqlite --args '{"db_path":"/path/to/db.sqlite","passphrase":"secret"}' 2>&1 | tee mcp-debug.log
+./build/install/mcp-encrypted-sqlite/bin/mcp-encrypted-sqlite --args '{"db_path":"/path/to/db.sqlite","passphrase":"secret"}' 2>&1 | tee mcp-debug.log
 ```
 
 #### Common Communication Problems
@@ -732,7 +752,7 @@ Contributions are welcome! Please feel free to submit a Pull Request. See [CONTR
 
 ## Support
 
-For issues, questions, or contributions, please open an issue on [GitHub](https://github.com/rosch100/mcp-sqlite/issues).
+For issues, questions, or contributions, please open an issue on [GitHub](https://github.com/rosch100/mcp-encrypted-sqlite/issues).
 
 ## Metadata
 

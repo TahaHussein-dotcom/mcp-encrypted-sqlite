@@ -211,7 +211,7 @@ public final class PassphraseEncryption {
     private static String generateDeterministicKey() {
         // Simple deterministic key for development
         // In production, always use a random key
-        String seed = "mcp-sqlite-default-key-development-only";
+        String seed = "mcp-encrypted-sqlite-default-key-development-only";
         byte[] keyBytes = new byte[32];
         byte[] seedBytes = seed.getBytes(StandardCharsets.UTF_8);
         for (int i = 0; i < 32; i++) {

@@ -86,7 +86,7 @@ Use the encrypted passphrase in your MCP configuration (e.g., `~/.cursor/mcp.jso
 {
   "mcpServers": {
     "encrypted-sqlite": {
-      "command": "/path/to/mcp-sqlite/build/install/mcp-sqlite/bin/mcp-sqlite",
+      "command": "/path/to/mcp-encrypted-sqlite/build/install/mcp-encrypted-sqlite/bin/mcp-encrypted-sqlite",
       "args": [
         "--args",
         "{\"db_path\":\"/path/to/your/database.sqlite\",\"passphrase\":\"encrypted:<encrypted-passphrase>\"}"
@@ -105,13 +105,13 @@ If you don't want to use the scripts:
 
 ### Generate Key:
 ```bash
-java -cp build/libs/mcp-sqlite-VERSION.jar com.example.mcp.sqlite.util.GenerateKey
+java -cp build/libs/mcp-encrypted-sqlite-VERSION.jar com.example.mcp.sqlite.util.GenerateKey
 ```
 
 ### Encrypt Passphrase:
 ```bash
 export MCP_SQLITE_ENCRYPTION_KEY="<your-key>"
-java -cp build/libs/mcp-sqlite-VERSION.jar com.example.mcp.sqlite.util.EncryptPassphrase "your-passphrase"
+java -cp build/libs/mcp-encrypted-sqlite-VERSION.jar com.example.mcp.sqlite.util.EncryptPassphrase "your-passphrase"
 ```
 
 ## Security Considerations

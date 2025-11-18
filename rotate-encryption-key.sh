@@ -6,7 +6,7 @@ set -e
 
 # Get version from build.gradle or use default pattern
 VERSION=$(grep "^version = " build.gradle | sed "s/version = '\\(.*\\)'/\\1/" | tr -d "'")
-JAR_FILE="build/libs/mcp-sqlite-${VERSION}.jar"
+JAR_FILE="build/libs/mcp-encrypted-sqlite-${VERSION}.jar"
 
 echo "⚠️  ENCRYPTION KEY ROTATION SCRIPT"
 echo "=================================="

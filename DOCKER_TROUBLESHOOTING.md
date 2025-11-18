@@ -65,7 +65,7 @@ The path is missing the leading `/` or is not absolute.
         "-i",
         "-v",
         "/Users/username/Library/Application Support/YourApp/Database/YourDatabase.sqlite:/data/database.sqlite:ro",
-        "ghcr.io/rosch100/mcp-sqlite:latest",
+        "ghcr.io/rosch100/mcp-encrypted-sqlite:latest",
         "--args",
         "{\"db_path\":\"/data/database.sqlite\",\"passphrase\":\"your-passphrase\"}"
       ]
@@ -85,9 +85,9 @@ The Docker image was built only for `linux/amd64`, but you're on Apple Silicon (
 
 The image should now support both platforms. If you still see this error:
 
-1. Pull the latest image: `docker pull ghcr.io/rosch100/mcp-sqlite:latest`
-2. Check if multi-platform build completed: https://github.com/rosch100/mcp-sqlite/actions
-3. Try using `latest` tag: `ghcr.io/rosch100/mcp-sqlite:latest`
+1. Pull the latest image: `docker pull ghcr.io/rosch100/mcp-encrypted-sqlite:latest`
+2. Check if multi-platform build completed: https://github.com/rosch100/mcp-encrypted-sqlite/actions
+3. Try using `latest` tag: `ghcr.io/rosch100/mcp-encrypted-sqlite:latest`
 
 ## Error: "Client closed for command"
 
@@ -104,7 +104,7 @@ The container starts but immediately exits, usually due to:
    ```bash
    docker run --rm -i \
      -v /absolute/path/to/database.sqlite:/data/database.sqlite:ro \
-     ghcr.io/rosch100/mcp-sqlite:latest \
+     ghcr.io/rosch100/mcp-encrypted-sqlite:latest \
      --args '{"db_path":"/data/database.sqlite","passphrase":"test"}'
    ```
 
@@ -113,7 +113,7 @@ The container starts but immediately exits, usually due to:
    docker run --rm -i \
      -e MCP_SQLITE_ENCRYPTION_KEY="your-encryption-key" \
      -v /absolute/path/to/database.sqlite:/data/database.sqlite:ro \
-     ghcr.io/rosch100/mcp-sqlite:latest \
+     ghcr.io/rosch100/mcp-encrypted-sqlite:latest \
      --args '{"db_path":"/data/database.sqlite","passphrase":"encrypted:your-encrypted-passphrase"}'
    ```
 
@@ -138,7 +138,7 @@ You're using an encrypted passphrase (`encrypted:...`) but haven't passed the en
 1. **Get your encryption key:**
    ```bash
    # On macOS (if stored in Keychain)
-   security find-generic-password -s "mcp-sqlite" -a "encryption-key" -w
+   security find-generic-password -s "mcp-encrypted-sqlite" -a "encryption-key" -w
    ```
 
 2. **Add the `-e` flag to your Docker command:**
@@ -155,7 +155,7 @@ You're using an encrypted passphrase (`encrypted:...`) but haven't passed the en
            "MCP_SQLITE_ENCRYPTION_KEY=your-encryption-key-here",
            "-v",
            "/path/to/database.sqlite:/data/database.sqlite:ro",
-           "ghcr.io/rosch100/mcp-sqlite:latest",
+           "ghcr.io/rosch100/mcp-encrypted-sqlite:latest",
            "--args",
            "{\"db_path\":\"/data/database.sqlite\",\"passphrase\":\"encrypted:...\"}"
          ]
@@ -189,7 +189,7 @@ The MCP server didn't start successfully, so the client can't connect.
 
 2. **Pull the image:**
    ```bash
-   docker pull ghcr.io/rosch100/mcp-sqlite:latest
+   docker pull ghcr.io/rosch100/mcp-encrypted-sqlite:latest
    ```
 
 3. **Test with a simple path:**
@@ -201,7 +201,7 @@ The MCP server didn't start successfully, so the client can't connect.
    # Test the container
    docker run --rm -i \
      -v /tmp/test/test.db:/data/test.db:ro \
-     ghcr.io/rosch100/mcp-sqlite:latest \
+     ghcr.io/rosch100/mcp-encrypted-sqlite:latest \
      --args '{"db_path":"/data/test.db","passphrase":""}'
    ```
 
@@ -213,7 +213,7 @@ The MCP server didn't start successfully, so the client can't connect.
 ## Configuration Checklist
 
 - [ ] Docker Desktop is running
-- [ ] Image is pulled: `docker pull ghcr.io/rosch100/mcp-sqlite:latest`
+- [ ] Image is pulled: `docker pull ghcr.io/rosch100/mcp-encrypted-sqlite:latest`
 - [ ] Path is absolute (starts with `/` on macOS/Linux)
 - [ ] Parent directory is in Docker File Sharing settings
 - [ ] Database file exists and is readable
@@ -224,6 +224,6 @@ The MCP server didn't start successfully, so the client can't connect.
 
 1. Check the main [DOCKER_CONFIGURATION.md](DOCKER_CONFIGURATION.md)
 2. Review [README.md](README.md) for general setup
-3. Check GitHub Issues: https://github.com/rosch100/mcp-sqlite/issues
+3. Check GitHub Issues: https://github.com/rosch100/mcp-encrypted-sqlite/issues
 
 
