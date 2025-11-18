@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.4] - 2025-11-18
+
+### Changed
+- **Documentation Maintenance**: Replaced all specific version numbers with generic placeholders in examples
+  - Docker examples now use `:latest` tag instead of specific versions
+  - JAR file examples use `VERSION` placeholder
+  - Scripts dynamically read version from `build.gradle`
+  - Prevents need to update examples with each version bump
+
+### Improved
+- Shell scripts (`generate-key.sh`, `encrypt-passphrase.sh`, `store-key-in-keychain.sh`, `rotate-encryption-key.sh`) now automatically detect version from `build.gradle`
+- All documentation examples are now version-agnostic
+
 ## [0.2.3] - 2025-11-18
 
 ### Changed

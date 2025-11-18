@@ -6,11 +6,11 @@
     "url": "https://github.com/rosch100/mcp-sqlite",
     "source": "github"
   },
-  "version": "0.2.3",
+  "version": "0.2.4",
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/rosch100/mcp-sqlite:0.2.3",
+      "identifier": "ghcr.io/rosch100/mcp-sqlite:0.2.4",
       "transport": {
         "type": "stdio"
       },
