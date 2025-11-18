@@ -2,11 +2,17 @@
 
 Alle Informationen für die Submission bei MCPList.ai
 
+## ⚠️ Wichtig: Kein Submission-Formular verfügbar
+
+MCPList.ai bietet **kein öffentliches Submission-Formular** auf der Website. Die Submission erfolgt per **E-Mail**.
+
 ## Quick Submission Guide
 
-1. **Besuche**: https://www.mcplist.ai/
-2. **Suche nach**: "Submit" oder "Add Server" Button/Link
-3. **Fülle das Formular aus** mit den folgenden Informationen:
+1. **Kontaktiere MCPList.ai per E-Mail**
+   - E-Mail-Adresse: [email protected] (oder über Kontakt-Seite)
+   - Betreff: "MCP Server Submission: Encrypted SQLite MCP Server"
+   
+2. **Verwende die folgende E-Mail-Vorlage** mit allen Informationen:
 
 ---
 
