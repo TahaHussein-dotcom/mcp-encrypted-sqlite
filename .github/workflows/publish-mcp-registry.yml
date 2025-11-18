@@ -145,14 +145,14 @@ jobs:
           echo "❌ Failed to publish to MCP Registry (exit code: $EXIT_CODE)"
           echo "published=false" >> $GITHUB_OUTPUT
           
-          # Check if it's a name conflict issue
+          # Note about repository rename
           echo ""
-          echo "Note: If you renamed the repository, you may need to:"
-          echo "1. Contact MCP Registry maintainers to update the repository name"
-          echo "2. Or publish as a new server with the new name"
-          echo ""
+          echo "Note: This server uses the new name after repository rename:"
           echo "Old name: io.github.rosch100/mcp-sqlite"
           echo "New name: io.github.rosch100/mcp-encrypted-sqlite"
+          echo ""
+          echo "The server will be published as a NEW entry with the new name."
+          echo "The old entry (mcp-sqlite) will remain in the registry."
           
           exit $EXIT_CODE
         fi
