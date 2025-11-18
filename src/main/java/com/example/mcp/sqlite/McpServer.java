@@ -50,7 +50,7 @@ public class McpServer {
         // MCP protocol requires stdout to be used ONLY for JSON-RPC messages
         // All debug output must go to stderr to avoid interfering with the protocol
         if (debugMode) {
-            System.err.println("=== MCP-SQLITE Server Start ===");
+            System.err.println("=== MCP-ENCRYPTED-SQLITE Server Start ===");
             System.err.println("Java Version: " + System.getProperty("java.version"));
             System.err.println("Java Home: " + System.getProperty("java.home"));
             System.err.println("OS: " + System.getProperty("os.name") + " " + System.getProperty("os.version"));
@@ -1020,6 +1020,6 @@ public class McpServer {
             throwable.printStackTrace(pw);
             System.err.println(sw.toString());
         }
-        LOGGER.log(Level.SEVERE, "[MCP-SQLITE] " + message, throwable);
+        LOGGER.log(Level.SEVERE, "[MCP-ENCRYPTED-SQLITE] " + message, throwable);
     }
 }

@@ -66,22 +66,13 @@ jobs:
           
           *This comment was automatically created by the release-notification workflow.*`;
           
-          // Post comment to release
-          github.rest.repos.createReleaseComment({
+          // Create issue for release notification
+          // Note: GitHub Releases don't support comments, so we create an issue instead
+          github.rest.issues.create({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            release_id: ${{ github.event.release.id }},
-            body: comment
-          }).catch(err => {
-            console.log('Could not post release comment (API may not support it), creating issue instead');
-            
-            // Fallback: Create issue
-            github.rest.issues.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              title: `📢 Manual Submission Required for Release ${version}`,
-              body: comment,
-              labels: ['release', 'documentation']
-            });
+            title: `📢 Release ${version} Published - Manual Submissions Required`,
+            body: comment,
+            labels: ['release', 'documentation']
           });
 
