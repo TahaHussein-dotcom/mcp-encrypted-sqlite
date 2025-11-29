@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.2] - 2025-11-29
+
+### Fixed
+- **MCP Response Format**: All tools now use consistent MCP format with content array
+  - `execute_sql`, `get_table_data`, `get_table_schema`, `list_indexes`, `insert_or_update`, `delete_rows` now use the same format as `list_tables`
+  - Response format: `{content: [{type: "text", text: "..."}]}`
+  - Fixes issue where tools did not work correctly in Cursor
+
+### Changed
+- **Documentation**: Clarified workflow names to distinguish Java build from Docker build
+  - Renamed 'Build and Test' to 'Java Build and Test'
+  - Renamed 'Build and Push Docker Image' to 'Docker Build and Push'
+
 ## [0.2.5] - 2025-11-18
 
 ### Changed
