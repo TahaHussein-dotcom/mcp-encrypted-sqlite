@@ -406,12 +406,12 @@ public class McpServer {
             ? params.get("protocolVersion").getAsString() 
             : "2024-11-05";
         result.addProperty("protocolVersion", clientProtocolVersion);
-        result.addProperty("version", "0.3.1");
+        result.addProperty("version", "0.3.2");
         result.addProperty("serverName", "encrypted-sqlite-mcp");
 
         JsonObject serverInfo = new JsonObject();
         serverInfo.addProperty("name", "encrypted-sqlite-mcp");
-        serverInfo.addProperty("version", "0.3.1");
+        serverInfo.addProperty("version", "0.3.2");
         result.add("serverInfo", serverInfo);
 
         JsonObject capabilities = new JsonObject();
@@ -748,9 +748,19 @@ public class McpServer {
         EncryptedSqliteClient.QueryResult result = sqliteClient.withConnection(config,
                 conn -> sqliteClient.selectTable(conn, table, filters, columns, limit, offset));
         
+        // MCP tools/call response format: use content array
         JsonObject response = new JsonObject();
-        response.add("columns", gson.toJsonTree(result.columns()));
-        response.add("rows", gson.toJsonTree(result.rows()));
+        JsonArray content = new JsonArray();
+        JsonObject contentItem = new JsonObject();
+        contentItem.addProperty("type", "text");
+        
+        JsonObject dataObj = new JsonObject();
+        dataObj.add("columns", gson.toJsonTree(result.columns()));
+        dataObj.add("rows", gson.toJsonTree(result.rows()));
+        contentItem.addProperty("text", gson.toJson(dataObj));
+        content.add(contentItem);
+        response.add("content", content);
+        
         return response;
     }
 
@@ -762,17 +772,27 @@ public class McpServer {
         EncryptedSqliteClient.QueryResult result = sqliteClient.withConnection(config,
                 conn -> sqliteClient.executeQuery(conn, sql));
         
+        // MCP tools/call response format: use content array
         JsonObject response = new JsonObject();
+        JsonArray content = new JsonArray();
+        JsonObject contentItem = new JsonObject();
+        contentItem.addProperty("type", "text");
+        
+        JsonObject dataObj = new JsonObject();
         if (result.affectedRows() >= 0) {
-            response.addProperty("affected_rows", result.affectedRows());
+            dataObj.addProperty("affected_rows", result.affectedRows());
             log("handleExecQuery: affected_rows: " + result.affectedRows());
         } else {
-            response.add("columns", gson.toJsonTree(result.columns()));
-            response.add("rows", gson.toJsonTree(result.rows()));
+            dataObj.add("columns", gson.toJsonTree(result.columns()));
+            dataObj.add("rows", gson.toJsonTree(result.rows()));
             log("handleExecQuery: " + result.columns().size() + " columns, " + result.rows().size() + " rows");
-            String responseJson = gson.toJson(response);
-            log("handleExecQuery: Response size: " + responseJson.length() + " chars");
         }
+        contentItem.addProperty("text", gson.toJson(dataObj));
+        content.add(contentItem);
+        response.add("content", content);
+        
+        String responseJson = gson.toJson(response);
+        log("handleExecQuery: Response size: " + responseJson.length() + " chars");
         return response;
     }
 
@@ -791,8 +811,19 @@ public class McpServer {
         List<Map<String, Object>> rows = gson.fromJson(params.getAsJsonArray("rows"), LIST_MAP_TYPE);
         Integer affected = sqliteClient.withConnection(config,
                 conn -> sqliteClient.insertOrUpdate(conn, table, primaryKeys, rows));
+        
+        // MCP tools/call response format: use content array
         JsonObject response = new JsonObject();
-        response.addProperty("affected_rows", affected);
+        JsonArray content = new JsonArray();
+        JsonObject contentItem = new JsonObject();
+        contentItem.addProperty("type", "text");
+        
+        JsonObject dataObj = new JsonObject();
+        dataObj.addProperty("affected_rows", affected);
+        contentItem.addProperty("text", gson.toJson(dataObj));
+        content.add(contentItem);
+        response.add("content", content);
+        
         return response;
     }
 
@@ -803,8 +834,19 @@ public class McpServer {
         Map<String, Object> filters = gson.fromJson(params.getAsJsonObject("filters"), MAP_TYPE);
         Integer affected = sqliteClient.withConnection(config,
                 conn -> sqliteClient.deleteRows(conn, table, filters));
+        
+        // MCP tools/call response format: use content array
         JsonObject response = new JsonObject();
-        response.addProperty("affected_rows", affected);
+        JsonArray content = new JsonArray();
+        JsonObject contentItem = new JsonObject();
+        contentItem.addProperty("type", "text");
+        
+        JsonObject dataObj = new JsonObject();
+        dataObj.addProperty("affected_rows", affected);
+        contentItem.addProperty("text", gson.toJson(dataObj));
+        content.add(contentItem);
+        response.add("content", content);
+        
         return response;
     }
 
@@ -868,8 +910,17 @@ public class McpServer {
             response.addProperty("create_sql", schema.createSql());
         }
         
+        // MCP tools/call response format: use content array
+        JsonObject mcpResponse = new JsonObject();
+        JsonArray content = new JsonArray();
+        JsonObject contentItem = new JsonObject();
+        contentItem.addProperty("type", "text");
+        contentItem.addProperty("text", gson.toJson(response));
+        content.add(contentItem);
+        mcpResponse.add("content", content);
+        
         log("handleGetTableSchema: Schema for table '" + table + "' successfully retrieved");
-        return response;
+        return mcpResponse;
     }
 
     private JsonElement handleListIndexes(JsonObject params) throws SQLException {
@@ -890,8 +941,18 @@ public class McpServer {
             result.add(idxObj);
         }
         
+        // MCP tools/call response format: use content array
         JsonObject response = new JsonObject();
-        response.add("indexes", result);
+        JsonArray content = new JsonArray();
+        JsonObject contentItem = new JsonObject();
+        contentItem.addProperty("type", "text");
+        
+        JsonObject dataObj = new JsonObject();
+        dataObj.add("indexes", result);
+        contentItem.addProperty("text", gson.toJson(dataObj));
+        content.add(contentItem);
+        response.add("content", content);
+        
         log("handleListIndexes: " + indexes.size() + " indexes found for table '" + table + "'");
         return response;
     }
