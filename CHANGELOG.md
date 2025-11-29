@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.3] - 2025-11-29
+
+### Added
+- **Cursor Installation Instructions**: Added dedicated Cursor installation section to README
+  - One-click installation via [cursor.store](https://www.cursor.store/mcp/rosch100/mcp-encrypted-sqlite)
+  - Manual Docker configuration examples
+  - Usage examples for Cursor AI interactions
+- **Enhanced server.json**: Updated with detailed installation instructions for cursor.store
+
+### Changed
+- **Documentation**: Improved installation documentation with Cursor-specific guidance
+
 ## [0.3.2] - 2025-11-29
 
 ### Fixed
