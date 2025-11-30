@@ -212,14 +212,10 @@ For enhanced security, you can store passphrases in encrypted form. The server u
 #### macOS Keychain (Recommended for macOS)
 
 1. **Generate and store key in Keychain:**
-   ```bash
-   ./store-key-in-keychain.sh --generate
-   ```
+   Run: `./store-key-in-keychain.sh --generate`
 
 2. **Encrypt your passphrase:**
-   ```bash
-   ./encrypt-passphrase.sh "your-plain-passphrase"
-   ```
+   Run: `./encrypt-passphrase.sh "your-plain-passphrase"`
 
 The key is automatically loaded from the Keychain when no environment variable is set.
 
@@ -232,19 +228,13 @@ The key is automatically loaded from the Keychain when no environment variable i
 #### Environment Variable (Cross-Platform)
 
 1. **Generate an encryption key:**
-   ```bash
-   java -cp build/libs/mcp-encrypted-sqlite-VERSION.jar com.example.mcp.sqlite.config.PassphraseEncryption
-   ```
+   Run: `java -cp build/libs/mcp-encrypted-sqlite-VERSION.jar com.example.mcp.sqlite.config.PassphraseEncryption`
 
 2. **Set the encryption key:**
-   ```bash
-   export MCP_SQLITE_ENCRYPTION_KEY="<your-generated-key>"
-   ```
+   Run: `export MCP_SQLITE_ENCRYPTION_KEY="<your-generated-key>"`
 
 3. **Encrypt your passphrase:**
-   ```bash
-   java -cp build/libs/mcp-encrypted-sqlite-VERSION.jar com.example.mcp.sqlite.util.EncryptPassphrase "your-plain-passphrase"
-   ```
+   Run: `java -cp build/libs/mcp-encrypted-sqlite-VERSION.jar com.example.mcp.sqlite.util.EncryptPassphrase "your-plain-passphrase"`
 
 #### Usage
 
@@ -516,9 +506,7 @@ The MCP server includes extensive debugging features to help diagnose communicat
 - All debug output is written to `stderr`
 
 **Manual testing:**
-```bash
-./build/install/mcp-encrypted-sqlite/bin/mcp-encrypted-sqlite --args '{"db_path":"/path/to/db.sqlite","passphrase":"secret"}' 2>&1 | tee mcp-debug.log
-```
+Run: `./build/install/mcp-encrypted-sqlite/bin/mcp-encrypted-sqlite --args '{"db_path":"/path/to/db.sqlite","passphrase":"secret"}' 2>&1 | tee mcp-debug.log`
 
 #### Common Communication Problems
 
@@ -647,8 +635,8 @@ Contributions are welcome! Please feel free to submit a Pull Request. See [CONTR
 
 For issues, questions, or contributions, please open an issue on [GitHub](https://github.com/rosch100/mcp-encrypted-sqlite/issues).
 
-## Buy me a coffee
+## Support
 
 Like this integration? Feel free to buy me a coffee! Your support helps me continue working on cool features.
 
-[![Buy Me A Coffee](https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=rosch100&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff)](https://buymeacoffee.com/rosch100)
+Visit: https://buymeacoffee.com/rosch100
