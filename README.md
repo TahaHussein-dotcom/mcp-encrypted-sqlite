@@ -10,16 +10,16 @@ A Model Context Protocol (MCP) server for working with encrypted SQLite database
 
 ## Features
 
-- 🔐 **Encrypted SQLite Support**: Works with SQLCipher 4 encrypted databases - the key differentiator of this MCP server
-- 🔑 **Encrypted Passphrases**: Support for AES-256-GCM encrypted passphrases with macOS Keychain integration
-- 📊 **Database Exploration**: List tables, columns, indexes, and schema metadata
-- 🔍 **Query Support**: Execute arbitrary SQL queries (SELECT, INSERT, UPDATE, DELETE, DDL)
-- 📝 **CRUD Operations**: Insert, update, and delete rows with filtering
-- ⚙️ **Configurable Cipher Profiles**: Support for different SQLCipher configurations
-- 🚀 **MCP Protocol**: Full Model Context Protocol implementation via STDIO
-- 🔒 **Security**: SQL identifier validation to prevent SQL injection
-- 🐛 **Debug Mode**: Optional debug output via `MCP_DEBUG` environment variable
-- 📏 **Input Validation**: Comprehensive validation for limits, offsets, and identifiers
+- **Encrypted SQLite Support**: Works with SQLCipher 4 encrypted databases - the key differentiator of this MCP server
+- **Encrypted Passphrases**: Support for AES-256-GCM encrypted passphrases with macOS Keychain integration
+- **Database Exploration**: List tables, columns, indexes, and schema metadata
+- **Query Support**: Execute arbitrary SQL queries (SELECT, INSERT, UPDATE, DELETE, DDL)
+- **CRUD Operations**: Insert, update, and delete rows with filtering
+- **Configurable Cipher Profiles**: Support for different SQLCipher configurations
+- **MCP Protocol**: Full Model Context Protocol implementation via STDIO
+- **Security**: SQL identifier validation to prevent SQL injection
+- **Debug Mode**: Optional debug output via `MCP_DEBUG` environment variable
+- **Input Validation**: Comprehensive validation for limits, offsets, and identifiers
 
 ## Why Encrypted SQLite?
 
@@ -186,7 +186,7 @@ When using encrypted passphrases, you **must** pass the encryption key as an env
 - Get your encryption key: `security find-generic-password -s "mcp-encrypted-sqlite" -a "encryption-key" -w`
 - The database file is mounted as read-only (`:ro`) by default. Remove `:ro` if you need write access
 
-**⚠️ Security Warning:** Storing both the encryption key and encrypted passphrase as plain text in your configuration file is a security risk. See [DOCKER_CONFIGURATION.md](DOCKER_CONFIGURATION.md) for secure alternatives.
+**Security Warning:** Storing both the encryption key and encrypted passphrase as plain text in your configuration file is a security risk. See [DOCKER_CONFIGURATION.md](DOCKER_CONFIGURATION.md) for secure alternatives.
 
 ### Custom Cipher Profile
 
@@ -227,10 +227,10 @@ For enhanced security, you can store passphrases in encrypted form. The server u
 The key is automatically loaded from the Keychain when no environment variable is set.
 
 **Benefits:**
-- ✅ Key is securely encrypted and stored by macOS
-- ✅ No environment variables needed
-- ✅ Automatic unlock with macOS user password
-- ✅ Works system-wide for all applications
+- Key is securely encrypted and stored by macOS
+- No environment variables needed
+- Automatic unlock with macOS user password
+- Works system-wide for all applications
 
 #### Environment Variable (Cross-Platform)
 
@@ -344,7 +344,7 @@ Read data from a table with optional filtering, column selection, and pagination
 
 Execute arbitrary SQL statements (SELECT, INSERT, UPDATE, DELETE, DDL).
 
-**⚠️ Security Warning**: This tool executes raw SQL without parameterization. Only use with trusted SQL or ensure proper validation and sanitization is performed before calling this tool. For safer operations, use the other tools (`get_table_data`, `insert_or_update`, `delete_rows`) which use parameterized queries.
+**Security Warning**: This tool executes raw SQL without parameterization. Only use with trusted SQL or ensure proper validation and sanitization is performed before calling this tool. For safer operations, use the other tools (`get_table_data`, `insert_or_update`, `delete_rows`) which use parameterized queries.
 
 **Parameters:**
 - `sql` (required): SQL statement to execute
@@ -500,7 +500,7 @@ See [DEVELOPMENT.md](DEVELOPMENT.md) for development setup, building, testing, a
 1. **Use encrypted passphrases** with AES-256-GCM encryption
 2. **Generate strong keys** using `PassphraseEncryption.generateKey()` (256 bits / 32 bytes)
 3. **Store encryption keys securely**: Use macOS Keychain (recommended on macOS) or secure secret storage
-4. **⚠️ Never store both encryption key and encrypted passphrase in the same configuration file** - Use wrapper scripts or environment variables to load the key securely (see [DOCKER_CONFIGURATION.md](DOCKER_CONFIGURATION.md) for details)
+4. **Never store both encryption key and encrypted passphrase in the same configuration file** - Use wrapper scripts or environment variables to load the key securely (see [DOCKER_CONFIGURATION.md](DOCKER_CONFIGURATION.md) for details)
 5. **Rotate keys periodically** - when rotating, re-encrypt all passphrases with the new key
 6. **Use different keys** for different environments (development, staging, production)
 7. **Never commit keys or encrypted passphrases** to version control
@@ -652,6 +652,6 @@ For issues, questions, or contributions, please open an issue on [GitHub](https:
 
 ## Buy me a coffee
 
-Like this integration? Feel free to buy me a coffee! ☕ Your support helps me continue working on cool features.
+Like this integration? Feel free to buy me a coffee! Your support helps me continue working on cool features.
 
 [![Buy Me A Coffee](https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=rosch100&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff)](https://buymeacoffee.com/rosch100)
