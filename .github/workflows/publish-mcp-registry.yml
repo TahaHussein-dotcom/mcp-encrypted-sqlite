@@ -6,6 +6,9 @@ on:
     types:
       - completed
   workflow_dispatch:
+  
+# Ensure this runs after sync-versions completes
+# Docker Build runs in parallel and publish will wait for the image
     inputs:
       version:
         description: 'Version to publish (e.g., 0.2.4)'

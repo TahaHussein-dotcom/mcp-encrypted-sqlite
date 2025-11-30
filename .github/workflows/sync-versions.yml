@@ -1,8 +1,9 @@
 name: Sync Versions on Release
 
 on:
-  release:
-    types: [created]
+  push:
+    tags:
+      - 'v*'
   workflow_dispatch:
     inputs:
       version:
@@ -42,19 +43,15 @@ jobs:
         jq --version
         sed --version | head -1
     
-    - name: Extract version from release or input
+    - name: Extract version from tag or input
       id: version
       run: |
         set -e
         
-        if [ "${{ github.event_name }}" == "release" ]; then
-          VERSION="${{ github.event.release.tag_name }}"
-          if [ -z "$VERSION" ]; then
-            echo "❌ Release tag name is empty"
-            exit 1
-          fi
-          # Remove 'v' prefix if present
-          VERSION=${VERSION#v}
+        if [ "${{ github.event_name }}" == "push" ] && [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+          VERSION="${{ github.ref }}"
+          # Remove 'refs/tags/v' prefix
+          VERSION=${VERSION#refs/tags/v}
         else
           VERSION="${{ github.event.inputs.version }}"
         fi
@@ -367,9 +364,6 @@ jobs:
         else
           echo "No changes detected in build.gradle or server.json"
         fi
-    
-    - name: Update release tag and publish release
-      if: github.event_name == 'release'
       uses: actions/github-script@v7
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
