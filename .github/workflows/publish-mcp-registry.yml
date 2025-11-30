@@ -21,6 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      packages: read  # Required to check Docker image tags in GitHub Container Registry
       id-token: write  # Required for GitHub OIDC
     
     steps:
@@ -179,15 +180,30 @@ jobs:
           
           if [ "$HTTP_CODE" = "200" ]; then
             # Check if specific version tag exists in the versions list
-            VERSIONS=$(curl -s \
+            API_RESPONSE=$(curl -s \
               -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-              "https://api.github.com/users/${{ github.repository_owner }}/packages/container/${IMAGE_NAME#*/}/versions" | \
-              jq -r ".[].metadata.container.tags[]" 2>/dev/null || echo "")
+              "https://api.github.com/users/${{ github.repository_owner }}/packages/container/${IMAGE_NAME#*/}/versions" 2>/dev/null || echo "[]")
             
-            if echo "$VERSIONS" | grep -q "^${VERSION}$"; then
+            # Extract all tags from all versions
+            VERSIONS=$(echo "$API_RESPONSE" | jq -r ".[].metadata.container.tags[]?" 2>/dev/null | sort -u || echo "")
+            
+            # Debug: Show found tags (first 10)
+            if [ -n "$VERSIONS" ]; then
+              echo "Found tags (showing first 10):"
+              echo "$VERSIONS" | head -10
+            else
+              echo "⚠️  No tags found in API response"
+            fi
+            
+            # Check if the exact version tag exists
+            if echo "$VERSIONS" | grep -qE "^${VERSION}$"; then
               echo "✅ Docker image ghcr.io/${IMAGE_NAME}:${VERSION} is now available!"
               break
+            else
+              echo "Tag '${VERSION}' not found in available tags"
             fi
+          else
+            echo "⚠️  API returned HTTP $HTTP_CODE (may need packages:read permission)"
           fi
           
           if [ $ATTEMPT -eq $MAX_ATTEMPTS ]; then
