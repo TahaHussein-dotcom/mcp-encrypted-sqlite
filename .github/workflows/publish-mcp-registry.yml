@@ -1,8 +1,6 @@
 name: Publish to MCP Registry
 
 on:
-  release:
-    types: [published]
   workflow_run:
     workflows: ["Sync Versions on Release"]
     types:
@@ -38,14 +36,10 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
     
-    - name: Extract version from tag, workflow_run, or input
+    - name: Extract version from workflow_run or input
       id: version
       run: |
-        if [ "${{ github.event_name }}" == "release" ]; then
-          VERSION="${{ github.event.release.tag_name }}"
-          # Remove 'v' prefix if present
-          VERSION=${VERSION#v}
-        elif [ "${{ github.event_name }}" == "workflow_run" ]; then
+        if [ "${{ github.event_name }}" == "workflow_run" ]; then
           # When triggered by workflow_run, read version from server.json
           # The sync-versions workflow should have already updated it
           VERSION=$(jq -r '.version' server.json)
@@ -55,7 +49,18 @@ jobs:
           fi
           echo "Extracted version from server.json: $VERSION"
         else
+          # workflow_dispatch - use input or read from server.json
           VERSION="${{ github.event.inputs.version }}"
+          if [ -z "$VERSION" ]; then
+            VERSION=$(jq -r '.version' server.json)
+            if [ -z "$VERSION" ] || [ "$VERSION" = "null" ]; then
+              echo "❌ Could not extract version from server.json or input"
+              exit 1
+            fi
+            echo "Extracted version from server.json: $VERSION"
+          else
+            echo "Using version from input: $VERSION"
+          fi
         fi
         echo "version=$VERSION" >> $GITHUB_OUTPUT
         echo "Publishing version: $VERSION"
