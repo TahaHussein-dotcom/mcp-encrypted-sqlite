@@ -164,7 +164,7 @@ jobs:
     
     - name: Wait for Docker image to be available
       run: |
-        # Use validated version (from server.json if mismatch, otherwise from release tag)
+        # Use validated version from server.json
         VERSION="${{ steps.validate.outputs.version }}"
         IMAGE_NAME="${{ github.repository }}"
         MAX_ATTEMPTS=30
@@ -239,9 +239,7 @@ jobs:
         echo "Version from server.json:"
         jq -r '.version' server.json
         
-        if [ "${{ steps.validate.outputs.version_mismatch }}" == "true" ]; then
-          echo "⚠️  Note: Using version from server.json ($(jq -r '.version' server.json)) instead of release tag (${{ steps.version.outputs.version }})"
-        fi
+        echo "Publishing version: $(jq -r '.version' server.json)"
         
         # Try to publish with verbose output
         if mcp-publisher publish --verbose 2>&1; then
