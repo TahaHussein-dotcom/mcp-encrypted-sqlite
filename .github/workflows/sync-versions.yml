@@ -12,6 +12,8 @@ on:
 
 jobs:
   sync:
+    # Only run on tag push, not on branch push
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     permissions:
       contents: write
