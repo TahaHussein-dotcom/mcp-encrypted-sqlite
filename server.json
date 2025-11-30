@@ -8,12 +8,6 @@
   },
   "websiteUrl": "https://github.com/rosch100/mcp-encrypted-sqlite",
   "version": "0.3.5",
-  "permission_level": "high",
-  "category": "Data & APIs",
-  "tags": ["sqlite", "database", "encryption", "sqlcipher", "data-access", "local-files"],
-  "author": "rosch100",
-  "license": "Apache-2.0",
-  "security_notes": "This MCP server requires access to local encrypted SQLite database files and passphrases. It uses SQL identifier validation to prevent SQL injection. Passphrases are stored in memory only and never logged. Supports encrypted passphrases with AES-256-GCM encryption. High permission level due to filesystem access and ability to read/write sensitive database content.",
   "packages": [
     {
       "registryType": "oci",
@@ -46,8 +40,11 @@
           "encrypted-sqlite": {
             "command": "docker",
             "args": [
-              "run", "--rm", "-i",
-              "-v", "${DB_PATH}:/data/database.sqlite:ro",
+              "run",
+              "--rm",
+              "-i",
+              "-v",
+              "${DB_PATH}:/data/database.sqlite:ro",
               "ghcr.io/rosch100/mcp-encrypted-sqlite:latest",
               "--args",
               "{\"db_path\":\"/data/database.sqlite\",\"passphrase\":\"${DB_PASSPHRASE}\"}"
