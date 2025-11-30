@@ -7,11 +7,11 @@
     "source": "github"
   },
   "websiteUrl": "https://github.com/rosch100/mcp-encrypted-sqlite",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/rosch100/mcp-encrypted-sqlite:0.3.3",
+      "identifier": "ghcr.io/rosch100/mcp-encrypted-sqlite:0.3.4",
       "transport": {
         "type": "stdio"
       },
