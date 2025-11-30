@@ -4,6 +4,8 @@
 
 A Model Context Protocol (MCP) server for working with encrypted SQLite databases using SQLCipher. This server provides tools to read database structures, query tables, and perform CRUD operations on encrypted SQLite databases.
 
+**Compatible with all MCP clients** (Cursor, Claude Desktop, and others).
+
 **Works with encrypted databases from:** MoneyMoney, 1Password, Signal, WhatsApp, Firefox, Telegram, KeePass, and other applications using SQLCipher encryption.
 
 ## Features
@@ -41,52 +43,35 @@ If you need to access data from any of these applications or other SQLCipher-enc
 - **Gradle** (wrapper included)
 - SQLite JDBC driver with encryption support (`sqlite-jdbc-3.50.1.0.jar` from [sqlite-jdbc-crypt](https://github.com/Willena/sqlite-jdbc-crypt))
 
-## Cursor Installation (Recommended)
+## Quick Start
+
+### Cursor (One-Click Installation)
 
 The easiest way to install this MCP server in Cursor is via the **Cursor MCP Store**:
-
-### One-Click Installation
 
 1. Visit [cursor.store/mcp/rosch100/mcp-encrypted-sqlite](https://www.cursor.store/mcp/rosch100/mcp-encrypted-sqlite)
 2. Click **"Add to Cursor"**
 3. Follow the prompts to configure your database path and passphrase
 
-### Manual Cursor Configuration
+### Other MCP Clients
 
-If you prefer manual setup, add the following to your Cursor MCP configuration file (`~/.cursor/mcp.json`):
+This server works with any MCP-compatible client. See the [Configuration](#configuration) section below for setup instructions.
 
-```json
-{
-  "mcpServers": {
-    "encrypted-sqlite": {
-      "command": "docker",
-      "args": [
-        "run", "--rm", "-i",
-        "-v", "/path/to/your/database.sqlite:/data/database.sqlite:ro",
-        "ghcr.io/rosch100/mcp-encrypted-sqlite:latest",
-        "--args",
-        "{\"db_path\":\"/data/database.sqlite\",\"passphrase\":\"your-passphrase\"}"
-      ]
-    }
-  }
-}
+## Installation
+
+### Docker (Recommended)
+
+Use the pre-built Docker image from GitHub Container Registry:
+
+```bash
+docker pull ghcr.io/rosch100/mcp-encrypted-sqlite:latest
 ```
 
-**Note:** Replace `/path/to/your/database.sqlite` with the actual path to your encrypted SQLite database and `your-passphrase` with your database passphrase.
+**Quick Start:** See [DOCKER_QUICKSTART.md](DOCKER_QUICKSTART.md) for Docker Desktop setup.
 
-### Using in Cursor
+**Detailed Configuration:** See [DOCKER_CONFIGURATION.md](DOCKER_CONFIGURATION.md) for advanced options.
 
-Once installed, you can use the MCP server in Cursor by:
-
-1. Open Cursor Settings → MCP to verify the server is running
-2. In any chat, ask questions about your database:
-   - *"List all tables in my database"*
-   - *"Show me the schema of the accounts table"*
-   - *"Query the last 10 transactions"*
-
-The AI will automatically use the appropriate MCP tools to interact with your encrypted database.
-
-## Installation (From Source)
+### From Source
 
 1. Clone the repository:
 ```bash
@@ -94,45 +79,20 @@ git clone https://github.com/rosch100/mcp-encrypted-sqlite.git
 cd mcp-encrypted-sqlite
 ```
 
-2. Build the project (the SQLite JDBC driver will be downloaded automatically):
+2. Build the project:
 ```bash
-./gradlew build
+./gradlew build installDist
 ```
 
 The build process will automatically download `sqlite-jdbc-3.50.1.0.jar` from [sqlite-jdbc-crypt releases](https://github.com/Willena/sqlite-jdbc-crypt/releases) and place it in the `libs/` directory.
 
-4. Install the distribution:
-```bash
-./gradlew installDist
-```
-
 The executable will be available at `build/install/mcp-encrypted-sqlite/bin/mcp-encrypted-sqlite`.
-
-### Docker Installation (Alternative)
-
-You can also use the pre-built Docker image from GitHub Container Registry:
-
-```bash
-docker pull ghcr.io/rosch100/mcp-encrypted-sqlite:latest
-```
-
-Or use a specific version:
-
-```bash
-docker pull ghcr.io/rosch100/mcp-encrypted-sqlite:VERSION
-```
-
-**Quick Start:** See [DOCKER_QUICKSTART.md](DOCKER_QUICKSTART.md) for Docker Desktop setup.
-
-**Detailed Configuration:** See [DOCKER_CONFIGURATION.md](DOCKER_CONFIGURATION.md) for advanced options.
 
 ## Configuration
 
-This MCP server can be used with any MCP-compatible client. The configuration format follows the [Model Context Protocol specification](https://modelcontextprotocol.io/).
+This MCP server works with **any MCP-compatible client** (Cursor, Claude Desktop, etc.). The configuration format follows the [Model Context Protocol specification](https://modelcontextprotocol.io/).
 
-### MCP Client Configuration
-
-The server communicates via STDIO (standard input/output) and can be configured in any MCP client. Add the following configuration to your MCP client's configuration file:
+The server communicates via STDIO (standard input/output). Add the following configuration to your MCP client's configuration file:
 
 **Configuration file locations:**
 - **Cursor**: `~/.cursor/mcp.json`
@@ -156,13 +116,9 @@ The server communicates via STDIO (standard input/output) and can be configured 
 
 **Optional Parameters:**
 
-Most parameters can be omitted if your system is properly configured:
-
-- **`transport`**: Defaults to `"stdio"` (can be omitted for most clients)
+- **`transport`**: Defaults to `"stdio"` (can be omitted)
 - **`cwd`**: Not needed when using absolute paths (can be omitted)
-- **`env`**: Only needed if Java is not in your system PATH
-
-If you need to specify a custom Java installation, you can add:
+- **`env`**: Only needed if Java is not in your system PATH or for custom Java installation:
 
 ```json
 {
@@ -183,8 +139,6 @@ If you need to specify a custom Java installation, you can add:
 
 ### Docker Configuration
 
-If you're using the Docker image, configure it as follows:
-
 #### Plain Passphrase
 
 ```json
@@ -193,11 +147,8 @@ If you're using the Docker image, configure it as follows:
     "encrypted-sqlite": {
       "command": "docker",
       "args": [
-        "run",
-        "--rm",
-        "-i",
-        "-v",
-        "/path/to/your/database.sqlite:/data/database.sqlite:ro",
+        "run", "--rm", "-i",
+        "-v", "/path/to/your/database.sqlite:/data/database.sqlite:ro",
         "ghcr.io/rosch100/mcp-encrypted-sqlite:latest",
         "--args",
         "{\"db_path\":\"/data/database.sqlite\",\"passphrase\":\"your-passphrase\"}"
@@ -217,13 +168,9 @@ When using encrypted passphrases, you **must** pass the encryption key as an env
     "encrypted-sqlite": {
       "command": "docker",
       "args": [
-        "run",
-        "--rm",
-        "-i",
-        "-e",
-        "MCP_SQLITE_ENCRYPTION_KEY=your-encryption-key",
-        "-v",
-        "/path/to/your/database.sqlite:/data/database.sqlite:ro",
+        "run", "--rm", "-i",
+        "-e", "MCP_SQLITE_ENCRYPTION_KEY=your-encryption-key",
+        "-v", "/path/to/your/database.sqlite:/data/database.sqlite:ro",
         "ghcr.io/rosch100/mcp-encrypted-sqlite:latest",
         "--args",
         "{\"db_path\":\"/data/database.sqlite\",\"passphrase\":\"encrypted:your-encrypted-passphrase\"}"
@@ -235,24 +182,15 @@ When using encrypted passphrases, you **must** pass the encryption key as an env
 
 **Important Notes:**
 - The `-e` flag **must** come before the `-v` flag
-- **macOS Keychain is NOT accessible from Docker containers**, so you must pass the encryption key explicitly
-- Get your encryption key with: `security find-generic-password -s "mcp-encrypted-sqlite" -a "encryption-key" -w`
-- Replace `your-encryption-key` with your actual encryption key
-- Replace `your-encrypted-passphrase` with your encrypted passphrase (starting with `encrypted:`)
+- **macOS Keychain is NOT accessible from Docker containers** - pass the encryption key explicitly
+- Get your encryption key: `security find-generic-password -s "mcp-encrypted-sqlite" -a "encryption-key" -w`
+- The database file is mounted as read-only (`:ro`) by default. Remove `:ro` if you need write access
 
-**⚠️ Security Warning:** Storing both the encryption key and encrypted passphrase as plain text in your configuration file is a security risk. Anyone with access to the file can decrypt your passphrase. See [DOCKER_CONFIGURATION.md](DOCKER_CONFIGURATION.md) for secure alternatives:
-- **Option 1:** Load encryption key from environment variable (external source)
-- **Option 2:** Use a wrapper script that loads the key from macOS Keychain (recommended)
-- **Option 3:** Use plain passphrase for isolated, trusted environments
-- **Option 4:** Store secrets in a separate file with restricted permissions
-
-**Note:** The database file is mounted as read-only (`:ro`) by default. Remove `:ro` if you need write access.
-
-For detailed Docker configuration options and security best practices, see [DOCKER_CONFIGURATION.md](DOCKER_CONFIGURATION.md).
+**⚠️ Security Warning:** Storing both the encryption key and encrypted passphrase as plain text in your configuration file is a security risk. See [DOCKER_CONFIGURATION.md](DOCKER_CONFIGURATION.md) for secure alternatives.
 
 ### Custom Cipher Profile
 
-You can override the default SQLCipher 4 settings by including a `cipherProfile` in the MCP server configuration. Add the `cipherProfile` object to the JSON string passed in the `args` parameter:
+Override the default SQLCipher 4 settings by including a `cipherProfile` in the configuration JSON:
 
 ```json
 {
@@ -268,17 +206,13 @@ You can override the default SQLCipher 4 settings by including a `cipherProfile`
 }
 ```
 
-**Note:** The `cipherProfile` must be included in the JSON string within the `args` array, not as a separate configuration parameter. All fields in `cipherProfile` are optional - only specify the ones you want to override from the defaults.
-
-**Alternative:** You can also specify `cipherProfile` in individual tool calls (e.g., `listTables`, `getTableData`) to override the default configuration for that specific operation. However, it's recommended to configure it once in the MCP server configuration for consistency.
+**Note:** All fields in `cipherProfile` are optional - only specify the ones you want to override from the defaults. You can also specify `cipherProfile` in individual tool calls, but it's recommended to configure it once in the MCP server configuration for consistency.
 
 ### Encrypted Passphrases
 
 For enhanced security, you can store passphrases in encrypted form. The server uses **AES-256-GCM** encryption, which provides authenticated encryption and is both secure and fast.
 
 #### macOS Keychain (Recommended for macOS)
-
-On macOS, you can securely store the encryption key in the Keychain:
 
 1. **Generate and store key in Keychain:**
    ```bash
@@ -290,7 +224,7 @@ On macOS, you can securely store the encryption key in the Keychain:
    ./encrypt-passphrase.sh "your-plain-passphrase"
    ```
 
-The key will be automatically loaded from the Keychain when no environment variable is set.
+The key is automatically loaded from the Keychain when no environment variable is set.
 
 **Benefits:**
 - ✅ Key is securely encrypted and stored by macOS
@@ -298,37 +232,21 @@ The key will be automatically loaded from the Keychain when no environment varia
 - ✅ Automatic unlock with macOS user password
 - ✅ Works system-wide for all applications
 
-#### Environment Variable (Alternative/Cross-Platform)
+#### Environment Variable (Cross-Platform)
 
 1. **Generate an encryption key:**
    ```bash
    java -cp build/libs/mcp-encrypted-sqlite-VERSION.jar com.example.mcp.sqlite.config.PassphraseEncryption
    ```
-   Or use this simple Java snippet:
-   ```java
-   import com.example.mcp.sqlite.config.PassphraseEncryption;
-   String key = PassphraseEncryption.generateKey();
-   System.out.println(key);
-   ```
 
-2. **Set the encryption key as an environment variable:**
+2. **Set the encryption key:**
    ```bash
    export MCP_SQLITE_ENCRYPTION_KEY="<your-generated-key>"
    ```
 
 3. **Encrypt your passphrase:**
-   
-   Using the CLI tool (after building):
    ```bash
    java -cp build/libs/mcp-encrypted-sqlite-VERSION.jar com.example.mcp.sqlite.util.EncryptPassphrase "your-plain-passphrase"
-   ```
-   
-   Or programmatically:
-   ```java
-   import com.example.mcp.sqlite.config.PassphraseEncryption;
-   PassphraseEncryption encryption = PassphraseEncryption.fromBase64Key(System.getenv("MCP_SQLITE_ENCRYPTION_KEY"));
-   String encrypted = encryption.encrypt("your-plain-passphrase");
-   System.out.println(encrypted);
    ```
 
 #### Usage
@@ -370,18 +288,11 @@ Use the encrypted passphrase (with `encrypted:` prefix) in your configuration:
 ```
 
 **Important Security Notes:**
-- **REQUIRED**: The encryption key **MUST** be available either:
-  - In macOS Keychain (automatically used on macOS)
-  - Or as environment variable `MCP_SQLITE_ENCRYPTION_KEY`
-  The server will fail if an encrypted passphrase is used without the key.
-- The encryption key should be kept secure and never committed to version control
-- Use a strong, randomly generated key (256 bits / 32 bytes) - use `PassphraseEncryption.generateKey()` to generate one
-- The server automatically detects encrypted passphrases (those starting with `encrypted:`) and decrypts them before use
-- Plain passphrases (without `encrypted:` prefix) work as before and are not modified
-- Each encrypted passphrase uses a unique IV (Initialization Vector) for maximum security
-- **AES-256-GCM** provides authenticated encryption, protecting against both tampering and disclosure
-- Weak keys (e.g., all zeros, low entropy) are automatically rejected
-- The encryption key is validated on startup to ensure it meets security requirements
+- The encryption key **MUST** be available (macOS Keychain or `MCP_SQLITE_ENCRYPTION_KEY` environment variable)
+- The server automatically detects encrypted passphrases (starting with `encrypted:`) and decrypts them
+- Use `PassphraseEncryption.generateKey()` to generate strong keys (256 bits / 32 bytes)
+- **AES-256-GCM** provides authenticated encryption
+- Weak keys are automatically rejected
 
 ## Available Tools
 
@@ -572,80 +483,28 @@ These settings match the defaults used by tools like "DB Browser for SQLite" wit
 
 ## Development
 
-### Building
-
-```bash
-./gradlew build
-```
-
-### Running Tests
-
-```bash
-./gradlew test
-```
-
-### Running the Server
-
-```bash
-./gradlew run --args='{"db_path":"/path/to/db.sqlite","passphrase":"secret"}'
-```
-
-Or use the installed binary:
-
-```bash
-./build/install/mcp-encrypted-sqlite/bin/mcp-encrypted-sqlite --args '{"db_path":"/path/to/db.sqlite","passphrase":"secret"}'
-```
-
-### Project Structure
-
-```
-mcp-encrypted-sqlite/
-├── src/
-│   ├── main/java/com/example/mcp/sqlite/
-│   │   ├── McpServer.java          # Main MCP server implementation
-│   │   ├── EncryptedSqliteClient.java  # SQLite client with encryption
-│   │   ├── config/
-│   │   │   ├── DatabaseConfig.java     # Database configuration
-│   │   │   └── CipherProfile.java      # Cipher profile configuration
-│   │   └── util/
-│   │       └── SqliteUtil.java         # SQLite utilities
-│   └── test/                           # Unit tests
-├── libs/
-│   └── sqlite-jdbc-3.50.1.0.jar        # SQLite JDBC driver with encryption
-├── build.gradle                         # Gradle build configuration
-└── README.md                            # This file
-```
+See [DEVELOPMENT.md](DEVELOPMENT.md) for development setup, building, testing, and project structure.
 
 ## Security Considerations
-
-### Passphrase Encryption
-
-- **Encryption Algorithm**: AES-256-GCM (Galois/Counter Mode) - provides authenticated encryption
-- **Key Management**: The encryption key (`MCP_SQLITE_ENCRYPTION_KEY`) **MUST** be set as an environment variable
-- **Key Generation**: Always use `PassphraseEncryption.generateKey()` to generate keys - never use weak or predictable keys
-- **Key Storage**: Store the encryption key securely (e.g., in a secrets manager) and never commit it to version control
-- **Key Validation**: Weak keys (all zeros, low entropy) are automatically rejected
 
 ### General Security
 
 - **Passphrases**: Passphrases are only stored in memory and never logged
-- **Encrypted Passphrases**: Use encrypted passphrases with AES-256-GCM for storing passphrases in configuration files
+- **Encrypted Passphrases**: Use encrypted passphrases with AES-256-GCM for storing passphrases in configuration files (see [Encrypted Passphrases](#encrypted-passphrases) section)
 - **Memory**: Note that decrypted passphrases remain in memory as Java Strings (immutable). For maximum security, consider using `char[]` arrays, though this is not currently implemented.
 - **Transport**: Use secure transport channels (e.g., encrypted sessions) when accessing the server remotely
 - **File Permissions**: Ensure database files have appropriate file system permissions
-- **Environment Variables**: Be cautious when passing sensitive data via environment variables - use encrypted passphrases instead
 
 ### Security Best Practices
 
-1. **Always set `MCP_SQLITE_ENCRYPTION_KEY`** when using encrypted passphrases
-2. **Generate strong keys** using `PassphraseEncryption.generateKey()`
-3. **Rotate keys periodically** - when rotating, re-encrypt all passphrases with the new key
-4. **Use different keys** for different environments (development, staging, production)
-5. **Never commit keys or encrypted passphrases** to version control
-6. **Monitor access** to systems storing encryption keys
-7. **⚠️ Never store both encryption key and encrypted passphrase in the same configuration file** - Use wrapper scripts or environment variables to load the key securely (see [DOCKER_CONFIGURATION.md](DOCKER_CONFIGURATION.md) for details)
-8. **Use macOS Keychain** or secure secret storage for encryption keys when possible
-9. **Restrict file permissions** on configuration files containing secrets (`chmod 600`)
+1. **Use encrypted passphrases** with AES-256-GCM encryption
+2. **Generate strong keys** using `PassphraseEncryption.generateKey()` (256 bits / 32 bytes)
+3. **Store encryption keys securely**: Use macOS Keychain (recommended on macOS) or secure secret storage
+4. **⚠️ Never store both encryption key and encrypted passphrase in the same configuration file** - Use wrapper scripts or environment variables to load the key securely (see [DOCKER_CONFIGURATION.md](DOCKER_CONFIGURATION.md) for details)
+5. **Rotate keys periodically** - when rotating, re-encrypt all passphrases with the new key
+6. **Use different keys** for different environments (development, staging, production)
+7. **Never commit keys or encrypted passphrases** to version control
+8. **Restrict file permissions** on configuration files containing secrets (`chmod 600`)
 
 ## Troubleshooting
 
@@ -655,10 +514,9 @@ The MCP server includes extensive debugging features to help diagnose communicat
 
 #### Viewing Logs
 
-**In Cursor:**
-1. Open the Output panel: `Ctrl+Shift+U` (Windows/Linux) or `Cmd+Shift+U` (macOS)
-2. Select "MCP Logs" from the dropdown menu
-3. All debug output is written to `stderr` and visible there
+**In MCP clients:**
+- Check your client's log output (e.g., Cursor: Output panel → "MCP Logs")
+- All debug output is written to `stderr`
 
 **Manual testing:**
 ```bash
@@ -756,10 +614,9 @@ The server automatically logs:
 
 ### Connection issues
 
-- Verify Java is installed and accessible: `java -version`
+- Verify Java is installed: `java -version`
 - Check that `JAVA_HOME` is set correctly in the MCP configuration
 - Review your MCP client logs for detailed error messages
-- **Check startup logs**: The server logs Java version and home at startup
 
 ### FTS (Full-Text Search) tables
 
@@ -770,8 +627,6 @@ The server automatically handles FTS virtual tables that may not have accessible
 Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for details.
 
 ### Third-Party Licenses
-
-This project uses the following third-party libraries:
 
 - **sqlite-jdbc-crypt** (Apache License 2.0) - SQLite JDBC driver with encryption support
   - Source: https://github.com/Willena/sqlite-jdbc-crypt
@@ -795,16 +650,8 @@ Contributions are welcome! Please feel free to submit a Pull Request. See [CONTR
 
 For issues, questions, or contributions, please open an issue on [GitHub](https://github.com/rosch100/mcp-encrypted-sqlite/issues).
 
-## Metadata
-
-This server includes `server.json` with metadata for MCP server directories and registries.
-
 ## Buy me a coffee
 
 Like this integration? Feel free to buy me a coffee! ☕ Your support helps me continue working on cool features.
 
 [![Buy Me A Coffee](https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=rosch100&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff)](https://buymeacoffee.com/rosch100)
-
-## License
-
-This project is licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
