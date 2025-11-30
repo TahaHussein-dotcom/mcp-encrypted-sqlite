@@ -29,12 +29,17 @@ jobs:
     - name: Check if sync-versions completed successfully
       if: github.event_name == 'workflow_run'
       run: |
-        if [ "${{ github.event.workflow_run.conclusion }}" != "success" ]; then
+        CONCLUSION="${{ github.event.workflow_run.conclusion }}"
+        if [ "$CONCLUSION" = "success" ]; then
+          echo "✅ Sync Versions workflow completed successfully"
+        elif [ "$CONCLUSION" = "skipped" ]; then
+          echo "⚠️  Sync Versions workflow was skipped (versions may already be synchronized)"
+          echo "Continuing with publish - will verify versions are synchronized"
+        else
           echo "❌ Sync Versions workflow did not complete successfully"
-          echo "Conclusion: ${{ github.event.workflow_run.conclusion }}"
+          echo "Conclusion: $CONCLUSION"
           exit 1
         fi
-        echo "✅ Sync Versions workflow completed successfully"
     
     - name: Checkout repository
       uses: actions/checkout@v4
